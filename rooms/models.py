@@ -41,7 +41,7 @@ class Room(models.Model):
     max_people       = models.IntegerField()
     description      = models.TextField()
     category         = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
-    room_type_id     = models.ForeignKey(RoomType, null=True, on_delete=models.SET_NULL)
+    room_type        = models.ForeignKey(RoomType, null=True, on_delete=models.SET_NULL)
     guest_type       = models.IntegerField()
     room_option      = models.ManyToManyField(RoomOption, through='RoomInfo')
     room_review      = models.ManyToManyField(User, through='Review', related_name='room_review')
