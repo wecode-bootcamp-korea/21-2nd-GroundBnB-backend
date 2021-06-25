@@ -16,7 +16,10 @@ class User(models.Model):
 
 class SocialFlatform(models.Model):
     provider_name = models.CharField(max_length=45)
+    provider_id   = models.CharField(max_length=200)
+    profile_image = models.URLField(max_length=2000)
+    nick_name     = models.CharField(max_length=45)
     user          = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    
     class Meta: 
         db_table = 'social_flatform'
