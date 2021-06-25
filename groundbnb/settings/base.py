@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'rooms',
+    'django_db_views',
 ]
 
 MIDDLEWARE = [

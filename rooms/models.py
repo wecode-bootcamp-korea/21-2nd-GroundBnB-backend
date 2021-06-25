@@ -1,4 +1,5 @@
 from django.db import models
+from django_db_views.db_view import DBView
 
 from users.models import User
 
@@ -48,6 +49,7 @@ class Room(models.Model):
     room_reservation = models.ManyToManyField(User, through='RoomReservation', related_name='room_reservation')
     room_convenience = models.ManyToManyField(Convenience, through='RoomConvenience')
     user_wish        = models.ManyToManyField(User, through='Wish')
+    host             = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='room_host')
 
     class Meta:
         db_table = 'rooms'
@@ -111,9 +113,54 @@ class Image(models.Model):
     class Meta:
         db_table = 'images'
 
+    @property
+    def s3_url(self):
+        return 'https://groundbnb.s3.us-east-2.amazonaws.com/' + self.storage_path + self.file_name
+
 class Wish(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'wishes'
+
+class RoomView(DBView, models.Model):
+    room           = models.ForeignKey(Room, on_delete=models.DO_NOTHING, related_name='rooms_view')
+    name           = models.CharField(max_length=45)
+    address        = models.CharField(max_length=200)
+    price          = models.DecimalField(max_digits=12, decimal_places=2)
+    latitude       = models.CharField(max_length=45)
+    longitude      = models.CharField(max_length=45)
+    max_people     = models.IntegerField()
+    description    = models.TextField()
+    guest_type     = models.IntegerField()
+    check_in_date  = models.DateField()
+    check_out_date = models.DateField()
+
+    view_definition = '''
+        SELECT
+            ms.id
+            ms.name,
+            ms.address,
+            ms.price,
+            ms.latitude,
+            ms.longitude,
+            ms.max_people,
+            ms.description,
+            ms.guest_type,
+            ns.check_in_date,
+            ns.check_out_date
+        FROM rooms ms
+        LEFT JOIN (
+            SELECT
+                room_id,
+                max(check_in_date) as check_in_date,
+                max(check_out_date) as check_out_date
+            FROM room_reservations
+            GROUP BY room_id
+        ) ns ON ms.id = ns.room_id
+    '''
+
+    class Meta:
+        managed = False
+        db_table = 'rooms_view'
