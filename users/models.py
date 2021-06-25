@@ -6,7 +6,6 @@ class User(models.Model):
     email       = models.EmailField(null=True, max_length=45)
     password    = models.CharField(null=True, max_length=200)
     host        = models.BooleanField(default=0)
-    provider_id = models.CharField(max_length=200)
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
     is_deleted  = models.BooleanField(default=0)
