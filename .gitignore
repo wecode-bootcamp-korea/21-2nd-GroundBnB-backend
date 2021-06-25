@@ -3,7 +3,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,linux,zsh,vim,pycharm,visualstudiocode
 
 ### Linux ###
-
+key.json
+gspread_bulk.py
 my_settings.py
 
 # temporary files which can be created if a process still has a handle open of a deleted file
