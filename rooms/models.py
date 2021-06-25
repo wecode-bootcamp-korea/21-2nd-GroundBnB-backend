@@ -43,24 +43,24 @@ class Room(models.Model):
     category         = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     room_type        = models.ForeignKey(RoomType, null=True, on_delete=models.SET_NULL)
     guest_type       = models.IntegerField()
-    room_option      = models.ManyToManyField(RoomOption, through='RoomInfo')
-    room_review      = models.ManyToManyField(User, through='Review', related_name='room_review')
-    order            = models.ManyToManyField(User, through='Reservation', related_name='order')
+    room_option_info = models.ManyToManyField(RoomOption, through='RoomOptionInfo')
+    room_review      = models.ManyToManyField(User, through='RoomReview', related_name='room_review')
+    room_reservation = models.ManyToManyField(User, through='RoomReservation', related_name='room_reservation')
     room_convenience = models.ManyToManyField(Convenience, through='RoomConvenience')
     user_wish        = models.ManyToManyField(User, through='Wish')
 
     class Meta:
         db_table = 'rooms'
 
-class RoomInfo(models.Model):
+class RoomOptionInfo(models.Model):
     room        = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_option = models.ForeignKey(RoomOption, null=True, on_delete=models.SET_NULL)
     quantity    = models.IntegerField()
 
     class Meta:
-        db_table = 'room_infos'
+        db_table = 'room_option_infos'
 
-class Review(models.Model):
+class RoomReview(models.Model):
     user              = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     room              = models.ForeignKey(Room, on_delete=models.CASCADE)
     content           = models.TextField()
@@ -72,9 +72,9 @@ class Review(models.Model):
     review_evaluation = models.ManyToManyField(Evaluation, through='ReviewEvaluation')
     
     class Meta:
-        db_table = 'reviews'
+        db_table = 'room_reviews'
 
-class Reservation(models.Model):
+class RoomReservation(models.Model):
     check_in_date  = models.DateField()
     check_out_date = models.DateField()
     adult          = models.IntegerField(default=0)
@@ -86,10 +86,10 @@ class Reservation(models.Model):
     room           = models.ForeignKey(Room, null=True, on_delete=models.SET_NULL)
 
     class Meta:
-        db_table = 'reservations'
+        db_table = 'room_reservations'
 
 class ReviewEvaluation(models.Model):
-    review     = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review     = models.ForeignKey(RoomReview, on_delete=models.CASCADE)
     evaluation = models.ForeignKey(Evaluation, null=True, on_delete=models.SET_NULL)
     point      = models.FloatField()
     
