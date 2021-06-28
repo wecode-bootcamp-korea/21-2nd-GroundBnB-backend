@@ -7,7 +7,6 @@ from django.http      import JsonResponse
 from groundbnb.settings.local import LOCAL_SECRET_KEY, ALGORITHM
 from users.models             import User, SocialFlatform
 
-# client에서 받아온 카카오 서버 토큰으로 유저 검사
 class KakaoLoginView(View):
     def get(self, request):
         try:
@@ -38,7 +37,7 @@ class KakaoLoginView(View):
                 user = User.objects.create(
                     name  = profile.get('nickname'),
                     email = kakao_account.get('email'),
-                    birth = kakao_user_info.get('birth', None), # birth 정보 들어오면 데이터 타입 때문에 에러 확률 있음.
+                    birth = kakao_user_info.get('birth', None),
                 )
 
                 SocialFlatform.objects.create(
@@ -49,12 +48,13 @@ class KakaoLoginView(View):
                     user          = user
                 )
                 social_user_id = SocialFlatform.objects.get(user_id=user.id)           
-                access_token   = jwt.encode({'id': social_user_id.id}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+                access_token   = jwt.encode({'id': social_user_id.id, 'is_host' : user.host}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
 
                 return JsonResponse({'MESSAGE': 'CREATED_USER', 'access_token': access_token}, status=200)
            
-            user = SocialFlatform.objects.get(provider_id=kakao_provider_id)
-            access_token   = jwt.encode({'id': user.id}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)           
+            user         = SocialFlatform.objects.get(provider_id=kakao_provider_id)
+            is_host      = user.user.host
+            access_token = jwt.encode({'id': user.id, 'is_host' : is_host}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)           
 
             return JsonResponse({'MESSAGE': 'EXISTS_USER', 'access_token': access_token}, status=200)
 
@@ -93,12 +93,13 @@ class GoogleLoginView(View):
                 )
 
                 social_user_id = SocialFlatform.objects.get(user_id=user.id)           
-                access_token   = jwt.encode({'id': social_user_id.id}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+                access_token   = jwt.encode({'id': social_user_id.id, 'is_host' : user.host}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
 
                 return JsonResponse({'MESSAGE': 'CREATED_USER', 'access_token': access_token}, status=200)
 
-            user = SocialFlatform.objects.get(provider_id=google_provider_id)
-            access_token   = jwt.encode({'id': user.id}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)           
+            user         = SocialFlatform.objects.get(provider_id=google_provider_id)
+            is_host      = user.user.host
+            access_token = jwt.encode({'id': user.id, 'is_host': is_host}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)           
 
             return JsonResponse({'MESSAGE': 'EXISTS_USER', 'access_token': access_token}, status=200)
 
