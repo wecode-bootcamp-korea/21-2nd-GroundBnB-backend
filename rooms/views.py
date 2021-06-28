@@ -1,4 +1,5 @@
 import sys, json
+from users.models import SocialFlatform
 
 from django.http       import JsonResponse
 from django.views      import View
@@ -7,7 +8,8 @@ from django.core.cache import cache
 
 from functools import reduce
 
-from .models import ReviewEvaluation, Room, RoomOption, Convenience, RoomType, RoomReview, Wish, Evaluation
+from .models     import ReviewEvaluation, Room, RoomOption, Convenience, RoomType, Wish, Evaluation
+from users.utils import public_login_required
 
 # 소수 2째자리
 FOMATTER = lambda x: 0 if not x else float(format(x, '.2f'))
@@ -149,3 +151,75 @@ class Rooms(View):
             return JsonResponse({'rooms' : result}, status=200)
         except IndexError:
             return JsonResponse({'result' : 'INVALID GEOCODE'}, status=400)
+
+class RoomDetailView(View):
+    @public_login_required
+    def get(self, request, room_id):
+        try:
+            room               = Room.objects.select_related('host').prefetch_related('image_set', 'host__socialflatform_set', 'roomoptioninfo_set', 'roomconvenience_set', 'roomreview_set').get(id=room_id)
+            is_wish            = True if Wish.objects.filter(user_id = request.user, room_id = room).exists() else False
+            image_urls         = [image.s3_url for image in room.image_set.all()]
+            host_profile_image = room.host.socialflatform_set.all()[0].profile_image
+            room_options       = [{
+                'name':option.room_option.name, 
+                'quantity':option.quantity
+            } for option in room.roomoptioninfo_set.all()]
+            room_conveniences  = [
+                {
+                    'name':convenience.convenience.name, 
+                    'exist':(
+                        True if convenience.convenience_id == convenience.id else False
+                            )
+                } for convenience in room.roomconvenience_set.all()
+            ]
+            reviews = [
+                {
+                    'name'          :review.user.name, 
+                    'profile_image' :review.user.socialflatform_set.all()[0].profile_image 
+                        if review.user.socialflatform_set.exists() else None, 
+                    'created_at'    :review.created_at.date(),
+                    'content'       :review.content, 
+                    'review_id'     :review.id
+                } for review in room.roomreview_set.all().order_by('-created_at')[:7]
+            ]
+            evaluations = Evaluation.objects\
+                .filter(reviewevaluation__review__room_id=room.id)\
+                .annotate(point_avg=Avg('reviewevaluation__point'))
+            points = [
+                {
+                    'name':evaluation.name, 
+                    'points':FOMATTER(evaluation.point_avg)
+                } for evaluation in evaluations
+            ]
+            point_average = FOMATTER(ReviewEvaluation.objects.all().aggregate(Avg('point'))['point__avg'])
+                    
+            result = [
+                {
+                    'room_id'            : room.id,
+                    'category_id'        : room.category_id,
+                    'title'              : room.name,
+                    'address'            : room.address,
+                    'user_wish'          : is_wish,
+                    'images'             : image_urls,
+                    'price'              : room.price,
+                    'max_people'         : room.max_people,
+                    'host_name'          : room.host.name, 
+                    'host_profile_image' : host_profile_image,
+                    'room_options'       : room_options,
+                    'description'        : room.description,
+                    'room_convenience'   : room_conveniences,
+                    'reviews'            : reviews,
+                    'points'             : points,
+                    'point_average'      : point_average,
+                    'review_count'       : room.room_review.count(),
+                    'lat'                : float(room.latitude),
+                    'lng'                : float(room.longitude)
+                }
+            ]
+
+            return JsonResponse({'message': 'SUCCESS', 'result': result}, status=200)
+        
+        except Room.DoesNotExist:
+            return JsonResponse({'message': 'DOSE_NOT_EXIST_VALUE'}, status=400)
+        except KeyError:
+            return JsonResponse({'message': 'KEY_ERROR'},status=400)
