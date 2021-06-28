@@ -1,4 +1,4 @@
-import Json, jwt
+import jwt
 
 from django.http import JsonResponse
 
@@ -9,7 +9,7 @@ def login_required(func):
     def wrapper(self, request, *args, **kwargs):
         try:
             access_token  = request.headers.get('Authorization', None)
-            payload       = jwt.encode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
             request.user  = User.objects.get(email=payload['email'])
 
             return func(self, request, *args, **kwargs)
@@ -31,7 +31,7 @@ def public_login_required(func):
                 request.user = 0
                 return func(self, request, *args, **kwargs)    
 
-            payload       = jwt.encode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
             request.user  = User.objects.get(email=payload['email'])
 
             return func(self, request, *args, **kwargs)
