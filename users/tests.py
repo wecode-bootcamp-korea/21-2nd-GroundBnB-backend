@@ -12,9 +12,8 @@ class KaKaoSigninTest(TestCase):
     def setUp(self):
         user = User.objects.create(
             name     = "HAN",
-            birth    = "1992-08-28",
             email    = "aaa@naver.com",
-            password = "123123123",
+            
         )
         SocialFlatform.objects.create(
             provider_name = 'kakao',
@@ -37,14 +36,18 @@ class KaKaoSigninTest(TestCase):
                         "properties"    : {"nickname" : "test_user"},
                         "kakao_account" : {"email"    : "test@gmail.com"}
                     }
-                    
         client = Client()
         mocked_requests.get = MagicMock(return_value = MockedResponce())
         headers             = {'Authoriazation' : 'FAKE_ACCESS_TOKEN'}
-        responce            = client.get("users/login/kakao", **headers)
+        responce            = client.get("/users/login/kakao", content_type = 'application/json', **headers)
 
-        social_user_id = SocialFlatform.objects.get(provider_id='101010').id
-        access_token   = jwt.encode({'user_id': social_user_id}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+        access_token   = jwt.encode({'user_id': 12345}, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
 
         self.assertEqual(responce.status_code, 200)
-        self.assertEqual(responce.json(), {"access_token" : access_token, 'user_id' : social_user_id})
+        self.assertEqual(responce.json(), 
+            {
+                'message'      : 'SUCCESS',
+                'access_token' : f'{access_token}',
+            }
+        )
+        

@@ -23,7 +23,26 @@ def UserTokenDeco(func):
     
     return wrapper
 
+def PublicUserDeco(func):
+    def wrapper(self, request, *args, **kwargs):
+        try:
+            access_token  = request.headers.get('Authorization', None)
 
+            if not access_token:
+                request.user = -1
+                return func(self, request, *args, **kwargs)    
 
+            payload       = jwt.encode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
+            request.user  = User.objects.get(email=payload['email'])
+
+            return func(self, request, *args, **kwargs)
+
+        except jwt.exceptions.DecodeError:
+            return JsonResponse({'MESSAGE': 'INVALID_TOKEN'}, status=400)
+
+        except User.DoesNotExist:
+            return JsonResponse({'MESSAGE': 'INVALID_USER'}, status=400)
+    
+    return wrapper
 
     
