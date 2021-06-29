@@ -20,3 +20,4 @@ urlpatterns = [
     path('wishes', include('rooms.urls.wishes_urls')),
     path('users', include('users.urls'))
 ]
+
