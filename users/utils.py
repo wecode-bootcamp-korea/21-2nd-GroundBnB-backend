@@ -1,7 +1,6 @@
 import Json, jwt
 
 from django.http            import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
 
 from .models             import User
 from groundbnb.settings.local import LOCAL_SECRET_KEY, ALGORITHM
