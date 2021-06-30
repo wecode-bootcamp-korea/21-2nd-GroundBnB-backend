@@ -1,8 +1,8 @@
 import Json, jwt
 
-from django.http            import JsonResponse
+from django.http import JsonResponse
 
-from .models             import User
+from .models                  import User
 from groundbnb.settings.local import LOCAL_SECRET_KEY, ALGORITHM
 
 def UserTokenDeco(func):
