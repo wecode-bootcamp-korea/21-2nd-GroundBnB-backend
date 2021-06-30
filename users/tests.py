@@ -22,6 +22,7 @@ class KaKaoSigninTest(TestCase):
             nick_name     = 'HAN',
             user          = user
         )
+        
 
     def tearDown(self):
         User.objects.all().delete()
