@@ -29,7 +29,7 @@ def PublicUserDeco(func):
             access_token  = request.headers.get('Authorization', None)
 
             if not access_token:
-                request.user = -1
+                request.user = 0
                 return func(self, request, *args, **kwargs)    
 
             payload       = jwt.encode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
