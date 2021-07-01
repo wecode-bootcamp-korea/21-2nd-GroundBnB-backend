@@ -17,5 +17,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('rooms', include('rooms.urls.rooms_urls')),
-    path('wishes', include('rooms.urls.wishes_urls'))
+    path('wishes', include('rooms.urls.wishes_urls')),
+    path('users', include('users.urls'))
 ]
