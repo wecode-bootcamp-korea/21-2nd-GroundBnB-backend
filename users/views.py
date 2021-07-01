@@ -21,6 +21,17 @@ class KakaoAPI:
 
         return response.json()
 
+    def request_kakao_logout(self):
+        kakao_logout_url = 'https://kapi.kakao.com/v1/user/logout'
+        headers          = {"Authorization" : f"Bearer {self.token}"}
+
+        response = requests.get(kakao_logout_url, headers = headers, timeout=1000)
+
+        if response.status_code != 200:
+            return JsonResponse({'MESSAGE' : 'RESPONSE_ERROR'}, status=400)
+        
+        return response.json()
+
 class GoogleAPI:
     def __init__(self, token):
         self.token = token
@@ -65,7 +76,15 @@ class KakaoLoginView(View):
             return JsonResponse({'access_token': access_token}, status=200)
 
         except KeyError:
-            return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=400)            
+            return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=400)     
+
+class KakaoLogoutView(View):
+    def post(self, request):
+        access_token = request.headers.get('Authorization')
+        kakao_user   = KakaoAPI(access_token)
+        user_logout  = kakao_user.request_kakao_logout()
+        
+        return JsonResponse({'access_logout' : user_logout}, status=200)
 
 class GoogleLoginView(View):
     def get(self, request):
