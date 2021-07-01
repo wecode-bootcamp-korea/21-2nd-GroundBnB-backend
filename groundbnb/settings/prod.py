@@ -3,7 +3,7 @@ from my_settings import PROD_SECRET_KEY, PROD_DATABASES, PROD_CACHES
 
 SECRET_KEY = PROD_SECRET_KEY
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
