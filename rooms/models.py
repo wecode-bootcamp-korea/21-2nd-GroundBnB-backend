@@ -67,7 +67,7 @@ class RoomReview(models.Model):
     room              = models.ForeignKey(Room, on_delete=models.CASCADE)
     content           = models.TextField()
     depth             = models.IntegerField()
-    group             = models.IntegerField()
+    group_id          = models.IntegerField()
     created_at        = models.DateTimeField(auto_now_add=True)
     updata_at         = models.DateTimeField(auto_now=True)
     is_deleted        = models.BooleanField(default=False)
@@ -138,8 +138,9 @@ class RoomView(DBView, models.Model):
     check_out_date = models.DateField()
 
     view_definition = '''
-        SELECT
-            ms.id
+        SELECT row_number() over() as
+            id,
+            ms.id as room_id,
             ms.name,
             ms.address,
             ms.price,

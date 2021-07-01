@@ -1,0 +1,10 @@
+from .base import *
+from my_settings import LOCAL_SECRET_KEY, LOCAL_DATABASES, LOCAL_CACHES, LOGGING
+
+SECRET_KEY = LOCAL_SECRET_KEY
+
+DEBUG = True
+
+ALLOWED_HOSTS = ['testserver']
+
+DATABASES = LOCAL_DATABASES
