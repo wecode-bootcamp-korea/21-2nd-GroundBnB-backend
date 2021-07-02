@@ -25,7 +25,7 @@
 ### 프로젝트 선정이유
 
 - Google Map Api를 활용한 여러 사이트 중, 에어비앤비의 Google Map 기능을 클론해보고 싶었습니다.
-- 일반적인 커머스 사이트와는 다른 다소 복잡해 보이는 모델링과 다양한 기능(예약기능, 댓글기능, 소셜로그인 등등)이 적절하게 조합이 되어져 있어서 선정하게 되었습니다.
+- 일반적인 커머스 사이트와는 다른 다소 복잡해 보이는 모델링과 다양한 기능(예약기능, 댓글기능, 소셜로그인 등등)이 적절하게 조합이 되어져 있었기에 선정하게 되었습니다.
 
 ### 데모 영상
 
@@ -34,7 +34,7 @@
 ### 적용 기술
 
 > - Front-End : React.js, StyledComponent, html, JavaScript, 
-> - Back-End  : Python, Django web framework, Bcrypt, JWT, My SQL, Redis
+> - Back-End  : Python, Django web framework, Bcrypt, JWT, MySQL, Redis
 > - Common    : AWS(EC2, RDS, S3, Docker), RESTful API
 
 ### 협업 Tool
