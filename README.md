@@ -19,8 +19,8 @@
     - 한성봉
  
 - GitHub
-  - [프론트엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-1st-catchcode-frontend)
-  - [백엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-1st-catchcode-backend)
+  - [프론트엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-2nd-GroundBnB-frontend.git)
+  - [백엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-2nd-GroundBnB-backend.git)
 
 ### 프로젝트 선정이유
 
