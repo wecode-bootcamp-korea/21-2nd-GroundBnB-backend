@@ -9,8 +9,8 @@ def login_required(func):
     def wrapper(self, request, *args, **kwargs):
         try:
             access_token  = request.headers.get('Authorization', None)
-            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
-            request.user  = User.objects.get(email=payload['email'])
+            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, ALGORITHM)
+            request.user  = User.objects.get(id=payload['id'])
 
             return func(self, request, *args, **kwargs)
 
@@ -31,8 +31,8 @@ def public_login_required(func):
                 request.user = 0
                 return func(self, request, *args, **kwargs)    
 
-            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, algorithm=ALGORITHM)
-            request.user  = User.objects.get(email=payload['email'])
+            payload       = jwt.decode(access_token, LOCAL_SECRET_KEY, ALGORITHM)
+            request.user  = User.objects.get(id=payload['id'])
 
             return func(self, request, *args, **kwargs)
 
