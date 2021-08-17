@@ -1,61 +1,105 @@
-## GROUNDBNB 프로젝트 Front-end/Back-end 소개
+# '에어비앤비' 웹사이트 구현 프로젝트
 
-- 세계 최대 숙소 예약 포털 사이트 [에어비앤비](https://www.airbnb.co.kr/) 클론 프로젝트
+## 프로젝트 설명
+- '에어비앤비' 커머스 사이트를 모티브로 하여 기능 구현 하였습니다.
+- 프로젝트 초기 단계부터 팀원과 협의하여 기획하였습니다.
+- 모든 기능은 직접 구현하였습니다.
 
-- 짧은 프로젝트 기간동안 개발에 집중해야 하므로 디자인/기획 부분만 클론하였으며, 저희의 아이디어가 담기도록 원단 판매 사이트로 변경하였습니다.
+## 구현한 기능
+- **Social 로그인** (내가 구현한 기능)
+    - 회원가입 : Social login 카카오, 구글 API를 이용하여 회원가입 기능 구현 
+    - 로그인 : Social login 카카오, 구글 API를 이용하여 회원가입 기능 구현
+    - 로그아웃 : 카카오 API를 활용하여 기능 구현 
+    - Decorator를 활용한 회원 인증 여부 기능 구현
+    - JWT를 이용하여 로그인 기능 구현
+    - Social API 관련하여 모듈화
+- **숙소**
+    - 검색어 리스트
+    - 숙소 리스트 조회
+    - 숙소 상세
+    - 숙소 댓글
+    - 숙소 항목별 평점 조회
+- **위시리스트(rooms)**
+    - 위시리스트 조회, 삭제, 추가
+- **예약**
+    - 예약 & 수정
 
-- 개발은 초기 세팅부터 전부 직접 구현했으며, 아래 데모 영상에서 보이는 부분은 모두 백앤드와 연결하여 실제 사용할 수 있는 서비스 수준으로 개발한 것입니다.
+## 프로젝트 환경
+- Python 3.8
+- Django 3.2
+- MySQL
 
-### 개발 인원 및 기간
+## 백엔드 사용기술
+- Python
+- Django
+- MySQL
+- JWT
 
-- 개발기간 : 2021/6/21 ~ 2021/7/2
-- 개발 인원
-  - 프론트엔드
-    - 백진수
-    - 박현찬
-  - 백엔드
-    - 유병건
-    - 황복실
-    - 한성봉
- 
-- GitHub
-  - [프론트엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-2nd-GroundBnB-frontend.git)
-  - [백엔드 GitHub URL](https://github.com/wecode-bootcamp-korea/21-2nd-GroundBnB-backend.git)
+## 프로젝트 형상관리 tool
+- Git(Github)
 
-### 프로젝트 선정이유
+## 협업 tool
+- trello
+- slack
 
-- Google Map Api를 활용한 여러 사이트 중, 에어비앤비의 Google Map 기능을 클론해보고 싶었습니다.
-- 일반적인 커머스 사이트와는 다른 다소 복잡해 보이는 모델링과 다양한 기능(예약기능, 댓글기능, 소셜로그인 등등)이 적절하게 조합이 되어져 있었기에 선정하게 되었습니다.
+## 프로젝트 사용법
+1. Git repository 에서 clone을 받습니다.
+<a href="https://github.com/SSABOODA/21-2nd-GroundBnB-backend">프로젝트 Github 링크</a>
 
-### 데모 영상
+```
+$ git clone https://github.com/SSABOODA/21-2nd-GroundBnB-backend.git
+```
 
-## 적용 기술 및 구현 기능
+## 백엔드 API 명세
+<a href="https://trello.com/b/0U1JaFTF/ground-bnb">백엔드 API 명세</a>
 
-### 적용 기술
+## ERD (modeling)
+![groundbnb erd](https://user-images.githubusercontent.com/69753846/129717794-83eba5db-ef72-47c2-b6b7-c773f671598a.png)
 
-> - Front-End : React.js, StyledComponent, html, JavaScript, 
-> - Back-End  : Python, Django web framework, Bcrypt, JWT, MySQL, Redis
-> - Common    : AWS(EC2, RDS, S3, Docker), RESTful API
 
-### 협업 Tool
-> trello, slack
 
-### 구현 기능
-#### 메인페이지
- - 검색(연관 검색어), Calendar
+## 프로젝트 구조
+```
+├── groundbnb
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings
+│   │   ├── base.py
+│   │   ├── dev.py
+│   │   ├── local.py
+│   │   ├── prod.py
+│   │   └── test.py
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+├── my_settings.py
+├── requirements.txt
+├── rooms
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls
+│   │   ├── rooms_urls.py
+│   │   └── wishes_urls.py
+│   └── views.py
+└── users
+    ├── admin.py
+    ├── apps.py
+    ├── migrations
+    ├── models.py
+    ├── tests.py
+    ├── urls.py
+    ├── utils.py
+    └── views.py
+```
+- groundbnb : 프로젝트 이름입니다.(최상위 폴더)
+    - groundbnb/settings.py : 프로젝트의 기반이 되는 파일들이 설정되어있습니다.(공통/개발환경/배포환경으로 나누어져있습니다)
+- my_settings.py : github에 push되면 안되는 내용들이 있습니다. (DATABASE 설정, SECERT_KEY, ALGORITHM)
+- requirements.txt : 프로젝트를 실행하기 위해 가상환경에 설치해줘야 할 프레임워크, 라이브러리 목록입니다. ex)django, mysqlclient...
+- rooms : 숙소 예약, 검색, 조회, 숙소 정보 상세, 댓글, 평점 등 모든 숙소 관련 API를 구현하기 위한 프로젝트 app 폴더입니다.
+- users : User 회원가입, 로그인, 회원인증 관련 데이코레이터 API를 구현하기 위한 프로젝트 app 폴더입니다.
 
-#### 회원가입 / 로그인
- - Kakao Social Login
 
-#### 검색 결과 페이지
- - Google Map Api를 활용한 숙소 리스트
 
-#### 상세 페이지
- - 숙소 평점별 표시
- - 예약하기
- - 댓글
-
-## Reference
-- 이 프로젝트는 [에어비앤비](https://www.airbnb.co.kr/) 사이트를 참조하여 학습목적으로 만들었습니다.
-- 실무수준의 프로젝트이지만 학습용으로 만들었기 때문에 이 코드를 활용하여 이득을 취하거나 무단 배포할 경우 법적으로 문제될 수 있습니다.
-- 이 프로젝트에서 사용하고 있는 사진 대부분은 위코드에서 구매한 것이므로 해당 프로젝트 외부인이 사용할 수 없습니다.
